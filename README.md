@@ -2,7 +2,7 @@
 
 This is a Flysystem adapter for the Aliyun OSS
 
-[![Build Status](https://travis-ci.com/larvacent/laravel-flysystem-oss.svg?branch=master)](https://travis-ci.com/larvacent/laravel-flysystem-oss)
+[![Build Status](https://travis-ci.com/larvatech/laravel-flysystem-oss.svg?branch=master)](https://travis-ci.com/larvatech/laravel-flysystem-oss)
 
 ## Installation
 
@@ -19,7 +19,7 @@ This service provider must be registered.
 
 'providers' => [
     '...',
-    Larva\Flysystem\OSS\ObjectStorageServiceProvider::class,
+    Larva\Flysystem\Aliyun\ObjectStorageServiceProvider::class,
 ];
 ```
 
