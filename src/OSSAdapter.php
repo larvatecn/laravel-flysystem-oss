@@ -107,7 +107,7 @@ class OSSAdapter extends AbstractAdapter
      * @param string $newpath
      * @return bool
      */
-    public function copy($path, $newpath)
+    public function copy($path, $newpath): bool
     {
         $object = $this->applyPathPrefix($path);
         $newObject = $this->applyPathPrefix($newpath);
@@ -252,13 +252,13 @@ class OSSAdapter extends AbstractAdapter
     }
 
     /**
- * List contents of a directory.
- *
- * @param string $directory
- * @param bool $recursive
- * @return array
- * @throws OssException
- */
+     * List contents of a directory.
+     *
+     * @param string $directory
+     * @param bool $recursive
+     * @return array
+     * @throws OssException
+     */
     public function listContents($directory = '', $recursive = false): array
     {
         $directory = rtrim($this->applyPathPrefix($directory), '\\/');
@@ -311,9 +311,9 @@ class OSSAdapter extends AbstractAdapter
      * Get all the meta data of a file or directory.
      *
      * @param string $path
-     * @return array|false
+     * @return array
      */
-    public function getMetadata($path)
+    public function getMetadata($path): array
     {
         $object = $this->applyPathPrefix($path);
         $result = $this->client->getObjectMeta($this->getBucket(), $object);
