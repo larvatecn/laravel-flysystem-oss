@@ -2,7 +2,7 @@
 
 This is a Flysystem adapter for the Aliyun OSS
 
-[![Build Status](https://travis-ci.com/larvatech/laravel-flysystem-oss.svg?branch=master)](https://travis-ci.com/larvatech/laravel-flysystem-oss)
+[![Build Status](https://travis-ci.com/larvatecn/laravel-flysystem-oss.svg?branch=master)](https://travis-ci.com/larvatecn/laravel-flysystem-oss)
 
 ## Installation
 
