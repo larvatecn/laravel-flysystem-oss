@@ -21,7 +21,7 @@ class Cdn extends AbstractPlugin
      *
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return 'cdn';
     }
@@ -42,7 +42,7 @@ class Cdn extends AbstractPlugin
      *
      * @return string
      */
-    public function signature($url, $key = null, $timestamp = null, $random = null)
+    public function signature($url, $key = null, $timestamp = null, $random = null): string
     {
         return $this->signatureA($url, $key, $timestamp, $random);
     }
@@ -55,7 +55,7 @@ class Cdn extends AbstractPlugin
      * @param string $signName
      * @return string
      */
-    public function signatureA($url, $key = null, $timestamp = null, $random = null, $signName = 'auth_key')
+    public function signatureA($url, $key = null, $timestamp = null, $random = null, $signName = 'auth_key'): string
     {
         $key = $key ?: $this->filesystem->getConfig()->get('cdn_key');
         $timestamp = $timestamp ?: time();
@@ -75,7 +75,7 @@ class Cdn extends AbstractPlugin
      *
      * @return string
      */
-    public function signatureB($url, $key = null, $timestamp = null)
+    public function signatureB($url, $key = null, $timestamp = null): string
     {
         $key = $key ?: $this->filesystem->getConfig()->get('cdn_key');
         $timestamp = date('YmdHis', $timestamp ?: time());
@@ -94,7 +94,7 @@ class Cdn extends AbstractPlugin
      *
      * @return string
      */
-    public function signatureC($url, $key = null, $timestamp = null)
+    public function signatureC($url, $key = null, $timestamp = null): string
     {
         $key = $key ?: $this->filesystem->getConfig()->get('cdn_key');
         $timestamp = dechex($timestamp ?: time());

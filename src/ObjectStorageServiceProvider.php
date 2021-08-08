@@ -7,11 +7,13 @@
 
 namespace Larva\Flysystem\Aliyun;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 use Larva\Flysystem\Aliyun\Plugins\Cdn;
 use Larva\Flysystem\Aliyun\Plugins\PutRemoteFile;
 use Larva\Flysystem\Aliyun\Plugins\PutRemoteFileAs;
 use League\Flysystem\Filesystem;
+use OSS\Core\OssException;
 use OSS\OssClient;
 
 /**
@@ -23,7 +25,7 @@ class ObjectStorageServiceProvider extends ServiceProvider
      * Perform post-registration booting of services.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException|OssException
      */
     public function boot()
     {

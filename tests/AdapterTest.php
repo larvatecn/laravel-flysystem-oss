@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AdapterTest extends TestCase
 {
-    public function Provider()
+    public function Provider(): array
     {
         $config = [
             'access_id' => getenv('OSS_ACCESS_ID'),

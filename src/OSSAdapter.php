@@ -26,12 +26,12 @@ class OSSAdapter extends AbstractAdapter
     /**
      * @var OssClient
      */
-    protected $client;
+    protected OssClient $client;
 
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Adapter constructor.
@@ -52,7 +52,7 @@ class OSSAdapter extends AbstractAdapter
      * @param string $path
      * @param string $contents
      * @param Config $config Config object
-     * @return array|false false on failure file meta data on success
+     * @return array false on failure file meta data on success
      */
     public function write($path, $contents, Config $config)
     {
@@ -64,11 +64,7 @@ class OSSAdapter extends AbstractAdapter
         if (!isset($options[OssClient::OSS_CONTENT_TYPE])) {
             $options[OssClient::OSS_CONTENT_TYPE] = Util::guessMimeType($path, $contents);
         }
-        try {
-            $this->client->putObject($this->getBucket(), $object, $contents, $options);
-        } catch (OssException $e) {
-            return false;
-        }
+        $this->client->putObject($this->getBucket(), $object, $contents, $options);
         $type = 'file';
         $result = compact('type', 'path', 'contents');
         $result['mimetype'] = $options[OssClient::OSS_CONTENT_TYPE];
@@ -93,12 +89,12 @@ class OSSAdapter extends AbstractAdapter
      * Rename a file.
      *
      * @param string $path
-     * @param string $newpath
+     * @param string $newPath
      * @return bool
      */
-    public function rename($path, $newpath)
+    public function rename($path, $newPath): bool
     {
-        if (!$this->copy($path, $newpath)) {
+        if (!$this->copy($path, $newPath)) {
             return false;
         }
         return $this->delete($path);
@@ -114,9 +110,9 @@ class OSSAdapter extends AbstractAdapter
     public function copy($path, $newpath)
     {
         $object = $this->applyPathPrefix($path);
-        $newobject = $this->applyPathPrefix($newpath);
+        $newObject = $this->applyPathPrefix($newpath);
         try {
-            $this->client->copyObject($this->getBucket(), $object, $this->getBucket(), $newobject);
+            $this->client->copyObject($this->getBucket(), $object, $this->getBucket(), $newObject);
         } catch (OssException $e) {
             return false;
         }
@@ -129,14 +125,10 @@ class OSSAdapter extends AbstractAdapter
      * @param string $path
      * @return bool
      */
-    public function delete($path)
+    public function delete($path): bool
     {
         $object = $this->applyPathPrefix($path);
-        try {
-            $this->client->deleteObject($this->getBucket(), $object);
-        } catch (OssException $e) {
-            return false;
-        }
+        $this->client->deleteObject($this->getBucket(), $object);
         return true;
     }
 
@@ -146,7 +138,7 @@ class OSSAdapter extends AbstractAdapter
      * @param string $dirname
      * @return bool
      */
-    public function deleteDir($dirname)
+    public function deleteDir($dirname): bool
     {
         try {
             $list = $this->listContents($dirname, true);
@@ -170,17 +162,13 @@ class OSSAdapter extends AbstractAdapter
      *
      * @param string $dirname directory name
      * @param Config $config
-     * @return array|false
+     * @return array
      */
-    public function createDir($dirname, Config $config)
+    public function createDir($dirname, Config $config): array
     {
         $object = $this->applyPathPrefix($dirname);
         $options = $this->prepareUploadConfig($config);
-        try {
-            $this->client->createObjectDir($this->getBucket(), $object, $options);
-        } catch (OssException $e) {
-            return false;
-        }
+        $this->client->createObjectDir($this->getBucket(), $object, $options);
         return ['path' => $dirname, 'type' => 'dir'];
     }
 
@@ -206,33 +194,24 @@ class OSSAdapter extends AbstractAdapter
      * Check whether a file exists.
      *
      * @param string $path
-     * @return array|bool|null
+     * @return bool
      */
-    public function has($path)
+    public function has($path): bool
     {
         $object = $this->applyPathPrefix($path);
-        try {
-            $exists = $this->client->doesObjectExist($this->getBucket(), $object);
-        } catch (OssException $e) {
-            return false;
-        }
-        return $exists;
+        return $this->client->doesObjectExist($this->getBucket(), $object);
     }
 
     /**
      * Read a file.
      *
      * @param string $path
-     * @return array|false
+     * @return array
      */
-    public function read($path)
+    public function read($path): array
     {
         $object = $this->applyPathPrefix($path);
-        try {
-            $contents = $this->client->getObject($this->getBucket(), $object);
-        } catch (OssException $e) {
-            return false;
-        }
+        $contents = $this->client->getObject($this->getBucket(), $object);
         return compact('contents', 'path');
     }
 
@@ -242,7 +221,7 @@ class OSSAdapter extends AbstractAdapter
      * @return string
      * @throws OssException
      */
-    public function getUrl($path)
+    public function getUrl(string $path): string
     {
         $location = $this->applyPathPrefix($path);
         if (isset($this->config['url']) && !empty($this->config['url'])) {
@@ -259,13 +238,13 @@ class OSSAdapter extends AbstractAdapter
 
     /**
      * 获取文件临时访问路径
-     * @param $path
-     * @param $expiration
-     * @param $options
+     * @param string $path
+     * @param \DateTimeInterface $expiration
+     * @param array $options
      * @return string
-     * @throws \OSS\Core\OssException
+     * @throws OssException
      */
-    public function getTemporaryUrl($path, \DateTimeInterface $expiration, array $options = [])
+    public function getTemporaryUrl(string $path, \DateTimeInterface $expiration, array $options = []): string
     {
         $location = $this->applyPathPrefix($path);
         $timeout = $expiration->getTimestamp() - time();
@@ -280,7 +259,7 @@ class OSSAdapter extends AbstractAdapter
  * @return array
  * @throws OssException
  */
-    public function listContents($directory = '', $recursive = false)
+    public function listContents($directory = '', $recursive = false): array
     {
         $directory = rtrim($this->applyPathPrefix($directory), '\\/');
         if ($directory) $directory .= '/';
@@ -337,11 +316,7 @@ class OSSAdapter extends AbstractAdapter
     public function getMetadata($path)
     {
         $object = $this->applyPathPrefix($path);
-        try {
-            $result = $this->client->getObjectMeta($this->getBucket(), $object);
-        } catch (OssException $e) {
-            return false;
-        }
+        $result = $this->client->getObjectMeta($this->getBucket(), $object);
         return [
             'type' => 'file',
             'dirname' => Util::dirname($path),
@@ -413,7 +388,7 @@ class OSSAdapter extends AbstractAdapter
      *
      * @return array
      */
-    private function prepareUploadConfig(Config $config)
+    private function prepareUploadConfig(Config $config): array
     {
         $options = [];
         if ($config->has('visibility')) {
@@ -428,7 +403,7 @@ class OSSAdapter extends AbstractAdapter
      *
      * @return string
      */
-    private function normalizeVisibility($visibility)
+    private function normalizeVisibility($visibility): string
     {
         switch ($visibility) {
             case AdapterInterface::VISIBILITY_PUBLIC:
@@ -447,7 +422,7 @@ class OSSAdapter extends AbstractAdapter
      *
      * @return string
      */
-    public function getBucket()
+    public function getBucket(): string
     {
         return $this->config['bucket'];
     }
@@ -455,9 +430,9 @@ class OSSAdapter extends AbstractAdapter
     /**
      * Get the Aliyun Oss Client instance.
      *
-     * @return \OSS\OssClient
+     * @return OssClient
      */
-    public function getClient()
+    public function getClient(): OssClient
     {
         return $this->client;
     }
