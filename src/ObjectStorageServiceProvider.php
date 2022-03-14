@@ -7,7 +7,6 @@
 namespace Larva\Flysystem\Aliyun;
 
 use Illuminate\Filesystem\FilesystemAdapter;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
 use Larva\Flysystem\Oss\OSSAdapter;
@@ -21,11 +20,12 @@ class ObjectStorageServiceProvider extends ServiceProvider
      * Perform post-registration booting of services.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function boot()
     {
-        Storage::extend('oss', function ($app, $config) {
-            $adapter = new OSSAdapter(\config('filesystems.disks.cos'));
+        $this->app->make('filesystem')->extend('oss', function ($app, $config) {
+            $adapter = new OSSAdapter($config);
             return new FilesystemAdapter(new Filesystem($adapter), $adapter);
         });
     }
