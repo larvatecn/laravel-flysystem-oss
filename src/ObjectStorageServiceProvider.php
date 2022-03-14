@@ -2,7 +2,6 @@
 /**
  * This is NOT a freeware, use is subject to license terms
  * @copyright Copyright (c) 2010-2099 Jinan Larva Information Technology Co., Ltd.
- * @link http://www.larva.com.cn/
  */
 
 namespace Larva\Flysystem\Aliyun;
@@ -42,15 +41,9 @@ class ObjectStorageServiceProvider extends ServiceProvider
             $client->setConnectTimeout($config['connect_timeout'] ?? 10);
             $client->setUseSSL($config['ssl'] ?? false);
 
-            $flysystem = new Filesystem(new OSSAdapter($client, $config), $config);
-            $flysystem->addPlugin(new Cdn());
-            $flysystem->addPlugin(new PutRemoteFile());
-            $flysystem->addPlugin(new PutRemoteFileAs());
-
-            return $flysystem;
+            return new Filesystem(new OSSAdapter($client, $config), $config);
         });
     }
-
 
     /**
      * Register bindings in the container.
