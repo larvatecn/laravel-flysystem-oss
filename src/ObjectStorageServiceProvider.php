@@ -28,9 +28,10 @@ class ObjectStorageServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->make('filesystem')->extend('oss', function ($app, $config) {
+            $root = (string)($config['root'] ?? '');
             $visibility = new PortableVisibilityConverter($config['visibility'] ?? Visibility::PUBLIC);
             $client = new OSSClient($config['access_id'], $config['access_key'], $config['endpoint'], false, $config['security_token'] ?? null, $config['proxy'] ?? null);
-            $adapter = new AliyunOSSAdapter($client, $config['bucket'], $config['prefix'], $visibility, null, $config['options'] ?? []);
+            $adapter = new AliyunOSSAdapter($client, $config['bucket'], $root, $visibility, null, $config['options'] ?? []);
 
             return new OSSAdapter(
                 new Flysystem($adapter, Arr::only($config, [
