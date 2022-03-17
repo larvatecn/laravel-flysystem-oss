@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Larva\Flysystem\Aliyun;
 
+use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use OSS\OssClient;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Larva\Flysystem\Oss\AliyunOSSAdapter;
@@ -44,8 +46,7 @@ class OSSAdapter extends FilesystemAdapter
      *
      * @param string $path
      * @return string
-     *
-     * @throws \RuntimeException
+     * @throws \OSS\Core\OssException
      */
     public function url($path): string
     {
@@ -55,7 +56,13 @@ class OSSAdapter extends FilesystemAdapter
         if (isset($this->config['url'])) {
             return $this->concatPathToUrl($this->config['url'], $this->prefixer->prefixPath($path));
         }
-        return $this->client->getObjectUrl($this->config['bucket'], $this->prefixer->prefixPath($path));
+        $visibility = $this->getVisibility($path);
+        if ($visibility == FilesystemContract::VISIBILITY_PRIVATE) {
+            return $this->temporaryUrl($path, Carbon::now()->addMinutes(5), []);
+        } else {
+            $scheme = $this->config['ssl'] ? 'https://' : 'http://';
+            return $this->concatPathToUrl($scheme . $this->config['bucket'] . '.' . $this->config['endpoint'] , $this->prefixer->prefixPath($path));
+        }
     }
 
     /**
@@ -65,26 +72,13 @@ class OSSAdapter extends FilesystemAdapter
      * @param \DateTimeInterface $expiration
      * @param array $options
      * @return string
+     * @throws \OSS\Core\OssException
      */
-    public function temporaryUrl($path, $expiration, array $options = [])
+    public function temporaryUrl($path, $expiration, array $options = []): string
     {
-        $command = $this->client->getCommand('GetObject', array_merge([
-            'Bucket' => $this->config['bucket'],
-            'Key' => $this->prefixer->prefixPath($path),
-        ], $options));
-
-        $uri = $this->client->createPresignedRequest(
-            $command, $expiration, $options
-        )->getUri();
-
-        // If an explicit base URL has been set on the disk configuration then we will use
-        // it as the base URL instead of the default path. This allows the developer to
-        // have full control over the base path for this filesystem's generated URLs.
-        if (isset($this->config['temporary_url'])) {
-            $uri = $this->replaceBaseUrl($uri, $this->config['temporary_url']);
-        }
-
-        return (string)$uri;
+        $location = $this->prefixer->prefixPath($path);
+        $timeout = $expiration->getTimestamp() - time();
+        return $this->client->signUrl($this->config['bucket'], $location, $timeout, OssClient::OSS_HTTP_GET, $options);
     }
 
     /**

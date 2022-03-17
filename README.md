@@ -35,7 +35,7 @@ add config
     'bucket' => env('OSS_BUCKET', 'your bucket'),
     'endpoint' => env('OSS_ENDPOINT', 'your endpoint'),//不要用CName,经过测试，官方SDK实现不靠谱
     'url' => env('OSS_URL','cdn url'),//CNAME 写这里，可以是域名绑定或者CDN地址 如 https://www.bbb.com 末尾不要斜杠
-    'prefix' => env('OSS_PREFIX', ''), // 这个文件路径前缀，如果上传的内容全部在子目录就填写，否则为空
+    'root' => env('OSS_ROOT', ''), // 这个文件路径前缀，如果上传的内容全部在子目录就填写，否则为空
     'security_token' => null,
     'proxy' => null,
     'timeout' => 3600,
