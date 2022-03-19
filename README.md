@@ -42,4 +42,4 @@ composer require larva/laravel-flysystem-oss -vv
 
 ## 使用
 
-参见 [Laravel wiki](https://laravel.com/docs/5.6/filesystem)
+参见 [Laravel wiki](https://laravel.com/docs/9.x/filesystem)
