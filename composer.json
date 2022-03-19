@@ -10,17 +10,9 @@
     "league/flysystem": "^3.0",
     "larva/flysystem-oss": "^1.0"
   },
-  "require-dev": {
-    "phpunit/phpunit": "^8.0"
-  },
   "autoload": {
     "psr-4": {
       "Larva\\Flysystem\\Aliyun\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Larva\\Flysystem\\Aliyun\\Tests\\": "tests"
     }
   },
   "extra": {
