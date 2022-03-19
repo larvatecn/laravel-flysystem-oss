@@ -1,31 +1,22 @@
-# flysystem-aliyun-oss
+# Laravel-flysystem-oss
 
-This is a Flysystem adapter for the Aliyun OSS
+<p align="center">
+    <a href="https://packagist.org/packages/larva/laravel-flysystem-oss"><img src="https://poser.pugx.org/larva/laravel-flysystem-oss/v/stable" alt="Stable Version"></a>
+    <a href="https://packagist.org/packages/larva/laravel-flysystem-oss"><img src="https://poser.pugx.org/larva/laravel-flysystem-oss/downloads" alt="Total Downloads"></a>
+    <a href="https://packagist.org/packages/larva/laravel-flysystem-oss"><img src="https://poser.pugx.org/larva/laravel-flysystem-oss/license" alt="License"></a>
+</p>
 
-[![Build Status](https://travis-ci.com/larvatecn/laravel-flysystem-oss.svg?branch=master)](https://travis-ci.com/larvatecn/laravel-flysystem-oss)
+适用于 Laravel 的阿里云 OSS 适配器，完整支持阿里云 OSS 所有方法和操作。
 
-## Installation
+## 安装
 
 ```bash
 composer require larva/laravel-flysystem-oss -vv
 ```
 
-## for Laravel
+修改配置文件: `config/filesystems.php`
 
-This service provider must be registered.
-
-```php
-// config/app.php
-
-'providers' => [
-    '...',
-    Larva\Flysystem\Aliyun\ObjectStorageServiceProvider::class,
-];
-```
-
-edit the config file: config/filesystems.php
-
-add config
+添加一个磁盘配置
 
 ```php
 'oss' => [
@@ -43,12 +34,12 @@ add config
 ],
 ```
 
-change default to oss
+修改默认存储驱动
 
 ```php
     'default' => 'oss'
 ```
 
-## Use
+## 使用
 
-see [Laravel wiki](https://laravel.com/docs/5.6/filesystem)
+参见 [Laravel wiki](https://laravel.com/docs/5.6/filesystem)
