@@ -28,11 +28,4 @@ phpunit.phar
 composer.phar
 composer.lock
 
-# Node.js modules
-node_modules/
-package-lock.json
-
-# Bower components
-bower_components
-/package-lock.json
-/.phpunit.result.cache
+.php-cs-fixer.cache

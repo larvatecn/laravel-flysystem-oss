@@ -1,30 +1,46 @@
 {
-  "name": "larva/laravel-flysystem-oss",
-  "description": "This is a Flysystem adapter for the Aliyun OSS.",
-  "keywords": [ "flysystem", "aliyun", "oss", "larva" ],
-  "type": "library",
-  "license": "MIT",
-  "require": {
-    "php": "^8.0",
-    "laravel/framework": "^9.0",
-    "league/flysystem": "^3.0",
-    "larva/flysystem-oss": "^1.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Larva\\Flysystem\\Aliyun\\": "src"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.0-dev"
+    "name": "larva/laravel-flysystem-oss",
+    "description": "This is a Flysystem adapter for the Aliyun OSS.",
+    "keywords": [
+        "flysystem",
+        "aliyun",
+        "oss",
+        "larva"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.0.2",
+        "laravel/framework": "^9.0",
+        "league/flysystem": "^3.0",
+        "larva/flysystem-oss": "^1.0"
     },
-    "laravel": {
-      "providers": [
-        "Larva\\Flysystem\\Aliyun\\ObjectStorageServiceProvider"
-      ]
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Larva\\Flysystem\\Aliyun\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Larva\\Flysystem\\Aliyun\\ObjectStorageServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "check-style": "./vendor/bin/php-cs-fixer fix --using-cache=no --diff --dry-run --ansi",
+        "fix-style": "./vendor/bin/php-cs-fixer fix --using-cache=no --ansi"
+    },
+    "scripts-descriptions": {
+        "check-style": "Run style checks (only dry run - no fixing!).",
+        "fix-style": "Run style checks and fix violations."
     }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
 }

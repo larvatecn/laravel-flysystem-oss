@@ -1,14 +1,10 @@
 <?php
 
-declare(strict_types=1);
-/**
- * This is NOT a freeware, use is subject to license terms
- */
-
 namespace Larva\Flysystem\Aliyun;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
+use OSS\Core\OssException;
 use OSS\OssClient;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Larva\Flysystem\Oss\AliyunOSSAdapter;
@@ -21,14 +17,14 @@ use League\Flysystem\FilesystemOperator;
 class OSSAdapter extends FilesystemAdapter
 {
     /**
-     * The AWS S3 client.
+     * The Aliyun Oss client.
      *
      * @var OssClient
      */
     protected OssClient $client;
 
     /**
-     * Create a new AwsS3V3FilesystemAdapter instance.
+     * Create a new OSSAdapter instance.
      *
      * @param FilesystemOperator $driver
      * @param AliyunOSSAdapter $adapter
@@ -46,7 +42,7 @@ class OSSAdapter extends FilesystemAdapter
      *
      * @param string $path
      * @return string
-     * @throws \OSS\Core\OssException
+     * @throws OssException
      */
     public function url($path): string
     {
@@ -61,7 +57,7 @@ class OSSAdapter extends FilesystemAdapter
             return $this->temporaryUrl($path, Carbon::now()->addMinutes(5), []);
         } else {
             $scheme = $this->config['ssl'] ? 'https://' : 'http://';
-            return $this->concatPathToUrl($scheme . $this->config['bucket'] . '.' . $this->config['endpoint'] , $this->prefixer->prefixPath($path));
+            return $this->concatPathToUrl($scheme . $this->config['bucket'] . '.' . $this->config['endpoint'], $this->prefixer->prefixPath($path));
         }
     }
 
@@ -72,7 +68,7 @@ class OSSAdapter extends FilesystemAdapter
      * @param \DateTimeInterface $expiration
      * @param array $options
      * @return string
-     * @throws \OSS\Core\OssException
+     * @throws OssException
      */
     public function temporaryUrl($path, $expiration, array $options = []): string
     {
