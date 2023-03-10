@@ -11,7 +11,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "laravel/framework": "^9.40",
+        "laravel/framework": "^9.40|^10.0",
         "league/flysystem": "^3.0",
         "larva/flysystem-oss": "^1.0"
     },
